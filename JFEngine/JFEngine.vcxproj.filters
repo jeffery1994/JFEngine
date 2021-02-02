@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4d851b36-8f23-420a-9609-939604984974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{e1fa4470-6b23-45b5-b492-ca7cabd66443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{3c61b24e-6239-43bb-9c3c-d975fd0b1d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{e70fdbe1-7531-4c4b-9813-b67e44c26884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{3935c1bd-9f5c-4a8b-b80a-131095ee923e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{a9458a66-41da-4d56-9b1b-2f15deae16b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructure">
+      <UniqueIdentifier>{ef13444e-f85c-4bf3-a786-55dc5530dc1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Algorithm">
+      <UniqueIdentifier>{09f8b575-9975-43a2-97bd-34e04ab3a279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{cf6be3a7-9862-4c0a-99d1-98c937d8ced9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX11">
+      <UniqueIdentifier>{eb4f6b4e-3b57-4840-8278-de4b683ee4fd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="jfengine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="jfrendersystem.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="jfinputsystem.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderNode.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsMessageMap.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiliException.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiliTimer.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphcis.cpp">
+      <Filter>DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject_Model.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject_Cube.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene_BasicCube.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene_BasicModel.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene_DirectionalLightCube.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject_Quad.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject_Skybox.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="jfengine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="jfrendersystem.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="jfinputsystem.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderNode.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsMessageMap.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliWin.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliException.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="chiliTimer.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="jfquicksort.h">
+      <Filter>Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="nba2k_offseason_tasks.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="JFList.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="JFTree.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="JFGraph.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="JFOpenGL.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject_Model.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject_Cube.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene_BasicCube.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene_BasicModel.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene_DirectionalLightCube.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject_Quad.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject_Skybox.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="4.2.texture.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="4.2.texture.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SimpleCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SimpleCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightingCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightingCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightingMaterialCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightingMaterialCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightmapCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="LightmapCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DirectionalLightCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DirectionalLightCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PointLightCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PointLightCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SpotLightCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SpotLightCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="SpotLightCubeSoftEdge.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="MultipleLights.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="MultipleLights.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ModelLoading.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="ModelLoading.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="MeshData.def">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="ResourceData.def">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="RenderObjectCube.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="RenderObjectCube.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Outline.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Outline.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Universal.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Universal.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PostProcess.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="PostProcess.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Skybox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Skybox.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="EnvironmentMapping.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="EnvironmentMapping.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shadow.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shadow.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="GaussianBlur.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="GaussianBlur.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="bloomFinal.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="bloomFinal.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Defered.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Defered.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DeferedFinal.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DeferedFinal.frag">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

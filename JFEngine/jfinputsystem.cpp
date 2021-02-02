@@ -1,0 +1,132 @@
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+#include "jfinputsystem.h"
+#include "camera.h"
+#include "jfengine.h"
+#include "jfrendersystem.h"
+#include "Scene.h"
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+static void OnMouseMovedCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	JFENGINE::GetInstance()->GetInputSystem()->OnMouseMoved(window,(float) xpos, (float)ypos);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+static void OnMouseScrolledCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	JFENGINE::GetInstance()->GetInputSystem()->OnMouseScrolled(window, (float)xoffset, (float)yoffset);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+JFINPUT_SYSTEM::JFINPUT_SYSTEM()
+	:Window(nullptr)
+	, ActiveCamera(nullptr)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+JFINPUT_SYSTEM::~JFINPUT_SYSTEM()
+{
+	Window = nullptr;
+	ActiveCamera = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+bool JFINPUT_SYSTEM::Init(GLFWwindow* Window)
+{
+	if (Inited) return false;
+	if (Window == nullptr) return false;
+	this->Window = Window;
+
+	//Get Camera
+	ActiveCamera = JFENGINE::GetInstance()->GetRenderSystem()->GetActiveCamera();
+
+	glfwSetCursorPosCallback(Window, OnMouseMovedCallback);
+	glfwSetScrollCallback(Window, OnMouseScrolledCallback);
+
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	Inited = true;
+	return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void JFINPUT_SYSTEM::Deinit()
+{
+	if (!Inited) return;
+	Inited = false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void JFINPUT_SYSTEM::ProcessInput(float DeltaTime)
+{
+	if (glfwGetKey(Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(Window, true);
+	}
+
+	UpdateCameraInput(DeltaTime);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void JFINPUT_SYSTEM::UpdateCameraInput(float DeltaTime)
+{
+	//TODO: Exception handling
+	ActiveCamera = JFENGINE::GetInstance()->GetRenderSystem()->GetActiveCamera();
+	if (ActiveCamera== nullptr) return;
+
+	if (glfwGetKey(Window, GLFW_KEY_W) == GLFW_PRESS)
+		ActiveCamera->ProcessKeyboard(FORWARD, DeltaTime);
+	if (glfwGetKey(Window, GLFW_KEY_S) == GLFW_PRESS)
+		ActiveCamera->ProcessKeyboard(BACKWARD, DeltaTime);
+	if (glfwGetKey(Window, GLFW_KEY_A) == GLFW_PRESS)
+		ActiveCamera->ProcessKeyboard(LEFT, DeltaTime);
+	if (glfwGetKey(Window, GLFW_KEY_D) == GLFW_PRESS)
+		ActiveCamera->ProcessKeyboard(RIGHT, DeltaTime);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void JFINPUT_SYSTEM::OnMouseMoved(GLFWwindow* window, float xpos, float ypos)
+{
+	if (ActiveCamera == nullptr) return;
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	ActiveCamera->ProcessMouseMovement(xoffset, yoffset);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void JFINPUT_SYSTEM::OnMouseScrolled(GLFWwindow* window, float xoffset, float yoffset)
+{
+	ActiveCamera->ProcessMouseScroll(yoffset);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void JFINPUT_SYSTEM::Update(float DeltaTime)
+{
+	if (!Inited ) return;
+	ProcessInput(DeltaTime);
+}

@@ -1,0 +1,34 @@
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+#pragma once
+#include "RenderObject.h"
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+class RenderObject_Model : public RenderObject
+{
+public:
+	RenderObject_Model();
+	RenderObject_Model(const char* vertexPath, const char* fragmentPath, const char* modelPath);
+	RenderObject_Model(const char* vertexPath, const char* fragmentPath);
+	void SetupRenderObject(const char* modelPath = "");
+
+	void Render();
+	void Destroy();
+private:
+	std::unique_ptr<Model> model;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+class RenderObjectFactory_Model : public RenderObjectFactory
+{
+public:
+	RenderObjectFactory_Model()
+		:RenderObjectFactory()
+	{
+
+	}
+	RenderObject* CreateRenderObject();
+	RenderObject* CreateRenderObject(const char* vertexPath, const char* fragmentPath);
+};

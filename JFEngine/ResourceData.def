@@ -1,0 +1,20 @@
+#pragma once
+#include "Mesh.h"
+
+namespace RESOURCE
+{
+	static Texture CubeDiffuseTexture(1, "texture_diffuse", "../textures/container2.png");
+	static Texture CubeSpecularTexture(2, "texture_specular", "../textures/container2_specular.png");
+	static Texture WallDiffuseTexture(3, "texture_diffuse", "../textures/wall.jpg");
+	static Texture GrassDiffuseTexture(4, "texture_diffuse", "../textures/grass.png");
+	static Texture GlassDiffuseTexture(5, "texture_diffuse", "../textures/blending_transparent_window.png");
+	static std::vector<Texture> SkyboxTexture =
+	{
+		Texture(6, "texture_diffuse", "../textures/skybox/right.jpg"),
+		Texture(7, "texture_diffuse", "../textures/skybox/left.jpg"),
+		Texture(8, "texture_diffuse", "../textures/skybox/top.jpg"),
+		Texture(9, "texture_diffuse", "../textures/skybox/bottom.jpg"),
+		Texture(10, "texture_diffuse", "../textures/skybox/front.jpg"),
+		Texture(11, "texture_diffuse", "../textures/skybox/back.jpg"),
+	};
+}
