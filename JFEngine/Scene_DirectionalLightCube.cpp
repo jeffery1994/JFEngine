@@ -141,6 +141,8 @@ void Scene_DirectionalLightCube::Init()
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::Render()
 {
 	glm::mat4 projection = glm::mat4(1.0f);
@@ -189,6 +191,8 @@ void Scene_DirectionalLightCube::ShadowPass(FrameBuffer* _shadowBuffer)
 	//_shadowBuffer->Draw();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::NormalPass(FrameBuffer* _frameBuffer, FrameBuffer* _shadowBuffer)
 {
 	if (_frameBuffer == nullptr || _shadowBuffer == nullptr ) return;
@@ -211,14 +215,16 @@ void Scene_DirectionalLightCube::NormalPass(FrameBuffer* _frameBuffer, FrameBuff
 	for (auto idx = 0; idx < renderObjects.size(); ++idx)
 	{
 		int numOfTextures = renderObjects[idx].get()->GetNumberOfTexture();
-		renderObjects[idx].get()->GetShader()->use();
 
-		//Bind depth texture
-		glActiveTexture(GL_TEXTURE0 + numOfTextures);
-		glUniform1i(glGetUniformLocation(renderObjects[idx].get()->GetShader()->ID, "shadowMap"), numOfTextures);
-		glBindTexture(GL_TEXTURE_2D, _shadowBuffer->GetShadowMap());
-		renderObjects[idx].get()->GetShader()->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-		renderObjects[idx].get()->GetShader()->setVec3("viewPos", camera->Position);
+		UpdateShaderConstants(renderObjects[idx].get()->GetShader(), numOfTextures, _shadowBuffer);
+
+		//renderObjects[idx].get()->GetShader()->use();
+		////Bind depth texture
+		//glActiveTexture(GL_TEXTURE0 + numOfTextures);
+		//glUniform1i(glGetUniformLocation(renderObjects[idx].get()->GetShader()->ID, "shadowMap"), numOfTextures);
+		//glBindTexture(GL_TEXTURE_2D, _shadowBuffer->GetShadowMap());
+		//renderObjects[idx].get()->GetShader()->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		//renderObjects[idx].get()->GetShader()->setVec3("viewPos", camera->Position);
 		renderObjects[idx].get()->SetProjectionMetrix(projection);
 		renderObjects[idx].get()->SetViewMetrix(view);
 		renderObjects[idx].get()->PreRender();
@@ -227,6 +233,8 @@ void Scene_DirectionalLightCube::NormalPass(FrameBuffer* _frameBuffer, FrameBuff
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::PostProcessPass(FrameBuffer* _frameBuffer)
 {
 	//Render texture to frame buffer
@@ -235,6 +243,8 @@ void Scene_DirectionalLightCube::PostProcessPass(FrameBuffer* _frameBuffer)
 	_frameBuffer->Draw();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::BloomPass(FrameBuffer* _pingPongBuffer1, FrameBuffer* _pingPongBuffer2, unsigned int texture)
 {
 	if (_pingPongBuffer1 == nullptr || _pingPongBuffer2 == nullptr) return;
@@ -256,6 +266,8 @@ void Scene_DirectionalLightCube::BloomPass(FrameBuffer* _pingPongBuffer1, FrameB
 	//_pingPongBuffer2->Draw();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::DeferedPass(FrameBuffer* _frameBuffer, FrameBuffer* _shadowBuffer)
 {
 	if (_frameBuffer == nullptr || _shadowBuffer == nullptr) return;
@@ -294,11 +306,15 @@ void Scene_DirectionalLightCube::DeferedPass(FrameBuffer* _frameBuffer, FrameBuf
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::PresentToScreen(Shader* _shader, unsigned int _texture)
 {
 	
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::DeferedFinalPass(Shader* _shader, unsigned int _screenQuadVBO, unsigned int _positionTexture, unsigned int _normalTexture, unsigned int _albedoSpecTexture, FrameBuffer* _frameBuffer)
 {
 	if (_frameBuffer == nullptr) glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -329,6 +345,8 @@ void Scene_DirectionalLightCube::DeferedFinalPass(Shader* _shader, unsigned int 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::DeferedFinalPass(Shader* _shader, unsigned int _screenQuadVBO, unsigned int _positionTexture, unsigned int _normalTexture, unsigned int _albedoTexture, unsigned int _specTexture, FrameBuffer* _frameBuffer)
 {
 	if (_frameBuffer == nullptr) glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -366,12 +384,14 @@ void Scene_DirectionalLightCube::DeferedFinalPass(Shader* _shader, unsigned int 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::SetGeneralShaderConstants(Shader* _shader)
 {
 	if (_shader == nullptr) return;
 	_shader->use();
 	_shader->setBool("hasLight", true);
-	_shader->setInt("numberOfLights", Lights.size());
+	_shader->setInt("numberOfLights", (int)Lights.size());
 	_shader->setVec3("viewPos", camera->Position);
 	std::string lightPost = "]";
 	for (auto idx = 0; idx < Lights.size(); ++idx)
@@ -412,6 +432,38 @@ void Scene_DirectionalLightCube::SetGeneralShaderConstants(Shader* _shader)
 		}
 	}
 	_shader->setFloat("shininess", 64.0f);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void Scene_DirectionalLightCube::UpdateShaderConstants(Shader* _shader, int _numOfTextures, FrameBuffer* _shadowBuffer)
+{
+	if (_shader == nullptr) return;
+	_shader->use();
+	//Bind depth texture
+	glActiveTexture(GL_TEXTURE0 + _numOfTextures);
+	glUniform1i(glGetUniformLocation(_shader->ID, "shadowMap"), _numOfTextures);
+	if (_shadowBuffer != nullptr)
+	{
+		glBindTexture(GL_TEXTURE_2D, _shadowBuffer->GetShadowMap());
+	}
+	_shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+	_shader->setVec3("viewPos", camera->Position);
+	for (auto idx = 0; idx < Lights.size(); ++idx)
+	{
+		stringstream ss;
+		ss << "lights[" << idx << "]";
+		string lightName = ss.str();
+		if (Lights[idx].get()->GetLightType() == SPOT_LIGHT)
+		{
+			SpotLight* spotLight = dynamic_cast<SpotLight*>(Lights[idx].get());
+			if (spotLight == nullptr) continue;
+			spotLight->SetPosition(camera->Position);
+			spotLight->SetDirection(camera->Front);
+			_shader->setVec3(lightName + ".position", Lights[idx].get()->GetPosition());
+			_shader->setVec3(lightName + ".direction", Lights[idx].get()->GetDirection());
+		}
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

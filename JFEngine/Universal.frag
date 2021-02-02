@@ -5,28 +5,25 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 #version 330 core
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
-  
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 in vec3 Normal;
 in vec2 TexCoord;
 in vec3 FragPos;
 in vec4 FragPosLightSpace;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_specular1;
-uniform sampler2D shadowMap;
-uniform samplerCube skybox;
-uniform float shininess;
-uniform bool hasLight;
-uniform int numberOfLights;
-
-const int MAX_NUM_OF_LIGHT = 10;
-
-//This is a general kind of light,
-//regradless of its type, its always
-//have all attributes of all types of
-//light casters
+///////////////////////////////////////////////////////////////////////////////
+//
+//This is a general kind of light, regradless of its type, its always
+//have all attributes of all types of light casters.
+//
+///////////////////////////////////////////////////////////////////////////////
 struct Light {
     int type;
     vec3 position;
@@ -40,11 +37,28 @@ struct Light {
     float cutOffAngleCosine;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+const int MAX_NUM_OF_LIGHT = 10;
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
+uniform sampler2D shadowMap;
+uniform samplerCube skybox;
+uniform float shininess;
+uniform bool hasLight;
+uniform int numberOfLights;
 uniform Light[MAX_NUM_OF_LIGHT] lights;
-//uniform Light light;
 uniform vec3 viewPos;
 
-//We are passing in the position of current fragment in light space
+///////////////////////////////////////////////////////////////////////////////
+//
+//	We are passing in the position of current fragment in light space
+//	This function is used to calculate shadow from directional light
+//
+///////////////////////////////////////////////////////////////////////////////
 float ShadowCalculation(vec4 fragPosLightSpace, Light light)
 {
     //Maually doing perspective divided, When we are using othroprojection,
@@ -62,6 +76,11 @@ float ShadowCalculation(vec4 fragPosLightSpace, Light light)
     return shadow;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Calculate light from point light
+//
+///////////////////////////////////////////////////////////////////////////////
 vec3 CalculatePointLight(Light light)
 {
     vec3 lightDir = normalize(light.position - FragPos);
@@ -91,6 +110,11 @@ vec3 CalculatePointLight(Light light)
     return result;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Calculate light from spot light
+//
+///////////////////////////////////////////////////////////////////////////////
 vec3 CalculateSpotLight(Light light)
 {
      vec3 lightDir = normalize(light.position - FragPos);
@@ -123,9 +147,14 @@ vec3 CalculateSpotLight(Light light)
         result = result + diffuse + specular;
     }
     
-    return light.position;
+    return lightDir;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Calculate light from directional light
+//
+///////////////////////////////////////////////////////////////////////////////
 vec3 CalculateDirctionalLight(Light light)
 {
     //Calculate ambient light
@@ -152,6 +181,11 @@ vec3 CalculateDirctionalLight(Light light)
     return result;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Combine all lights and shadow together with forward rendering
+//
+///////////////////////////////////////////////////////////////////////////////
 void main()
 {
     vec3 Result = vec3(0.0, 0.0, 0.0);
@@ -170,6 +204,7 @@ void main()
             }
             else if(lights[idx].type == 2)
             {
+				//Result = vec3(1.0, 0.0, 0.0);
                 Result += CalculateSpotLight(lights[idx]);
             }
         }

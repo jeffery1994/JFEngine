@@ -24,7 +24,7 @@ public:
 
 private:
 	void SetGeneralShaderConstants(Shader* _shader);
-	void UpdateShaderConstants(Shader* _shader);
+	void UpdateShaderConstants(Shader* _shader, int _numOfTextures = 0, FrameBuffer* _shadowBuffer = nullptr);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////
+//
+// Simple light class for all sorts of light caster
+//
+///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include <glm/gtc/type_ptr.hpp>
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 enum LIGHT_TYPE
 {
 	DIRECTIONAL_LIGHT,
@@ -8,6 +15,8 @@ enum LIGHT_TYPE
 	SPOT_LIGHT,
 };
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class Light
 {
 public:
@@ -34,6 +43,9 @@ public:
 	inline const glm::vec3 GetSpecular() { return specular; }
 	inline const glm::vec3 GetDirection() { return direction; }
 	inline const LIGHT_TYPE GetLightType() { return lightType; }
+	const glm::mat4 GetLightViewMatrix() { return lightView; }
+	const glm::mat4 GetLightProjectionMatrix() { return lightView; }
+	const glm::mat4 GetLightSpaceMatrix() { return lightView; }
 
 	//Setter
 	inline void SetPosition(const glm::vec3 &_position) { this->position = _position; }
@@ -43,17 +55,22 @@ public:
 	inline void SetDirection(const glm::vec3& _direction) { this->direction = _direction; }
 	inline void SetLightType(const LIGHT_TYPE _lightType) { this->lightType = _lightType; }
 
-	virtual void Setup(){}
+	virtual void SetupMatrix();
 
 protected:
-	LIGHT_TYPE lightType = DIRECTIONAL_LIGHT;
+	glm::mat4 lightView;
+	glm::mat4 lightProjection;
+	glm::mat4 lightSpaceMatrix;
 	glm::vec3 direction;
 	glm::vec3 position;
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
+	LIGHT_TYPE lightType = DIRECTIONAL_LIGHT;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class PointLight : public Light
 {
 public:
@@ -85,13 +102,15 @@ public:
 	void SetQuadratic(const float _quadratic) { this->quadratic = _quadratic; }
 
 	//Virtual
-	void Setup() {}
+	virtual void SetupMatrix();
 protected:
 	float constant;
 	float linear;
 	float quadratic;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 class SpotLight : public PointLight
 {
 public:
@@ -107,6 +126,9 @@ public:
 
 	//Setter
 	inline void SetCutOffAngleCosine(float _cutOffAngleCosine) { this->cutOffAngleCosine = _cutOffAngleCosine; }
+
+	virtual void SetupMatrix();
+
 private:
 	float cutOffAngleCosine;
 };
