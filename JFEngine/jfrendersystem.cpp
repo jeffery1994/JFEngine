@@ -34,7 +34,7 @@ JFRENDER_SYSTEM::~JFRENDER_SYSTEM()
 ///////////////////////////////////////////////////////////////////////////////
 void JFRENDER_SYSTEM::InitDefaultCamera()
 {
-	camera = new Camera(glm::vec3(0.0f, 0.0f, 0.0f));
+	camera = new Camera(glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void JFRENDER_SYSTEM::InitScreenQuad()

@@ -87,8 +87,8 @@ void Mesh::Draw(Shader* shader)
 	}
 	if (hasCubeMap)
 	{
-		glActiveTexture(GL_TEXTURE0 + textures.size());
-		glUniform1i(glGetUniformLocation(shader->ID, "skybox"), textures.size());
+		glActiveTexture(GL_TEXTURE0 + (GLenum)textures.size());
+		glUniform1i(glGetUniformLocation(shader->ID, "skybox"), (GLint)textures.size());
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap);
 	}
 

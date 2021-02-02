@@ -81,9 +81,10 @@ void PointLight::SetupMatrix()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-SpotLight::SpotLight(glm::vec3 _position, glm::vec3 _ambient, glm::vec3 _diffuse, glm::vec3 _specular, float _cutOffAngleCosine)
+SpotLight::SpotLight(glm::vec3 _position, glm::vec3 _ambient, glm::vec3 _diffuse, glm::vec3 _specular, float _cutOffAngleCosine, float _outterCutoff)
 	:PointLight(_position, _ambient, _diffuse, _specular)
-	,cutOffAngleCosine(_cutOffAngleCosine)
+	,cutOffAngleCosine(glm::cos(glm::radians(_cutOffAngleCosine)))
+	,outterCutoffAngle(glm::cos(glm::radians(_outterCutoff)))
 {
 	lightType = SPOT_LIGHT;
 	SetupMatrix();

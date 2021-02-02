@@ -108,10 +108,12 @@ void Scene_DirectionalLightCube::Init()
 	//)));
 
 	Lights.push_back(unique_ptr<Light>(new SpotLight(
-		glm::vec3(2.0f, 4.0f, 0.0f),
+		camera->Position,
 		glm::vec3(0.1f, 0.1f, 0.1f),
 		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(1.0f, 1.0f, 1.0f)
+		glm::vec3(1.0f, 1.0f, 1.0f),
+		12.5,
+		17.5
 	)));
 
 	//Lights.push_back(unique_ptr<Light>(new PointLight(
@@ -429,6 +431,7 @@ void Scene_DirectionalLightCube::SetGeneralShaderConstants(Shader* _shader)
 			_shader->setFloat(lightName + ".linear", spotLight->GetLinear());
 			_shader->setFloat(lightName + ".quadratic", spotLight->GetQuadratic());
 			_shader->setFloat(lightName + ".cutOffAngleCosine", spotLight->GetCutOffAngleCosine());
+			_shader->setFloat(lightName + ".outterCutoff", spotLight->GetOutterCutoff());
 		}
 	}
 	_shader->setFloat("shininess", 64.0f);
@@ -456,12 +459,12 @@ void Scene_DirectionalLightCube::UpdateShaderConstants(Shader* _shader, int _num
 		string lightName = ss.str();
 		if (Lights[idx].get()->GetLightType() == SPOT_LIGHT)
 		{
-			SpotLight* spotLight = dynamic_cast<SpotLight*>(Lights[idx].get());
-			if (spotLight == nullptr) continue;
-			spotLight->SetPosition(camera->Position);
-			spotLight->SetDirection(camera->Front);
-			_shader->setVec3(lightName + ".position", Lights[idx].get()->GetPosition());
-			_shader->setVec3(lightName + ".direction", Lights[idx].get()->GetDirection());
+			//SpotLight* spotLight = dynamic_cast<SpotLight*>(Lights[idx].get());
+			//if (spotLight == nullptr) continue;
+			//spotLight->SetPosition(camera->Position);
+			//spotLight->SetDirection(camera->Front);
+			_shader->setVec3(lightName + ".position", camera->Position);
+			_shader->setVec3(lightName + ".direction", camera->Front);
 		}
 	}
 }

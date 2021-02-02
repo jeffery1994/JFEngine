@@ -118,17 +118,21 @@ public:
 		glm::vec3 _ambient,
 		glm::vec3 _diffuse,
 		glm::vec3 _specular,
-		float _cutOffAngleCosine = 12.5
+		float _cutOffAngleCosine = glm::cos(glm::radians(12.5f)),
+		float _outterCutoff = glm::cos(glm::radians(17.5f))
 	);
 
 	//Getter
 	inline const float GetCutOffAngleCosine() { return cutOffAngleCosine; }
+	inline const float GetOutterCutoff() { return outterCutoffAngle; }
 
 	//Setter
 	inline void SetCutOffAngleCosine(float _cutOffAngleCosine) { this->cutOffAngleCosine = _cutOffAngleCosine; }
+	inline void SetOutterCutoff(float _outterCutoff) { this->outterCutoffAngle = _outterCutoff; }
 
 	virtual void SetupMatrix();
 
 private:
 	float cutOffAngleCosine;
+	float outterCutoffAngle;
 };
