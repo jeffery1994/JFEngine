@@ -75,6 +75,19 @@ void RenderObject::PreRender()
 	}
 }
 
+void RenderObject::PreRender(Shader* _shader)
+{
+	if (_shader != nullptr)
+	{
+		unsigned int loc = glGetUniformLocation(_shader->ID, "model");
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ModelMetrix));
+		loc = glGetUniformLocation(_shader->ID, "view");
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ViewMetrix));
+		loc = glGetUniformLocation(_shader->ID, "projection");
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ProjectionMetrix));
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 void RenderObject::Render()

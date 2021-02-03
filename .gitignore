@@ -1,6 +1,17 @@
 # Prerequisites
 *.d
 
+# Visual studio related files
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.suo
+*.ipch
+*.tlog
+*.idb
+*.pdb
+
 # Compiled Object files
 *.slo
 *.lo
@@ -28,3 +39,9 @@
 *.exe
 *.out
 *.app
+.vs/NBA2K/v16/.suo
+*.db
+*.pdb
+*.idb
+*.ilk
+*.pdb

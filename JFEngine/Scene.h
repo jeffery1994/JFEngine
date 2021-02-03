@@ -29,6 +29,7 @@ public:
 	virtual void PresentToScreen(Shader* _shader, unsigned int _texture){}
 	virtual void PresentToScreen(FrameBuffer* _frameBuffer, Shader* _shader, unsigned int _texture);
 	virtual void PostProcessPass(FrameBuffer* _frameBuffer) {}
+	virtual void DirectPBRPass(FrameBuffer* _frameBuffer, Shader* _directPBRShader) {}
 	virtual void Init() = 0;
 protected:
 	std::vector<std::unique_ptr<RenderObject>> renderObjects;

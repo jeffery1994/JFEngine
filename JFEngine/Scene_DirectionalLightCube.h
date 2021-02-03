@@ -21,10 +21,12 @@ public:
 	void PresentToScreen(Shader* _shader, unsigned int _texture);
 	void DeferedFinalPass(Shader* _shader, unsigned int _screenQuadVBO, unsigned int _positionTexture, unsigned int _normalTexture, unsigned int _albedoSpecTexture, FrameBuffer* _frameBuffer = nullptr);
 	void DeferedFinalPass(Shader* _shader, unsigned int _screenQuadVBO, unsigned int _positionTexture, unsigned int _normalTexture, unsigned int _albedoTexture, unsigned int _specTexture, FrameBuffer* _frameBuffer = nullptr);
-
+	void DirectPBRPass(FrameBuffer* _frameBuffer, Shader* _directPBRShader);
 private:
 	void SetGeneralShaderConstants(Shader* _shader);
+	void SetDirectPBRShaderConstants(Shader* _shader);
 	void UpdateShaderConstants(Shader* _shader, int _numOfTextures = 0, FrameBuffer* _shadowBuffer = nullptr);
+	void UpdateShaderConstantsForDirectPBR(Shader* _shader);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

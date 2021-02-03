@@ -373,5 +373,11 @@
     <None Include="DeferedFinal.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="DirectPBR.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="DirectPBR.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

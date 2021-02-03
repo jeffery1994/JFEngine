@@ -55,6 +55,9 @@ public:
 	//
 	FrameBuffer* GetFrameBufferByType(FRAME_BUFFER_TYPE Type);
 
+	//
+	Shader* GetShaderByType(SHADER_TYPE _type);
+
 private:
 	bool InitGLFW();
 	bool InitGLAD();
@@ -104,8 +107,9 @@ private:
 	int Height = 600;
 
 	//Rendering techinques toggle
+	bool usingDirectPBR = true;
 	bool usingDeferedShading = false;
 	bool usingBloom = false;
-	bool renderShadows = true;
+	bool renderShadows = false;
 	bool Inited = false;
 };

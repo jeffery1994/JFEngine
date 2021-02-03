@@ -8,6 +8,8 @@
 #include "ResourceData.def"
 #include "FrameBuffer.h"
 #include <sstream>
+#include "jfengine.h"
+#include "jfrendersystem.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,35 +31,57 @@ void Scene_DirectionalLightCube::Init()
 	//}
 
 	//Quad - AKA Floor
-	{
-		RenderObjectFactory_Quad* factory = new RenderObjectFactory_Quad();
-		renderObjects.push_back(unique_ptr<RenderObject>(factory->CreateRenderObject("Universal.vert", "Universal.frag", "Outline.vert", "Outline.frag")));
-		delete factory;
+	//{
+	//	RenderObjectFactory_Quad* factory = new RenderObjectFactory_Quad();
+	//	renderObjects.push_back(unique_ptr<RenderObject>(factory->CreateRenderObject("Universal.vert", "Universal.frag", "Outline.vert", "Outline.frag")));
+	//	delete factory;
 
-		//Add floor texture
-		renderObjects[renderObjects.size() - 1].get()->AddTexture(RESOURCE::WallDiffuseTexture);
-		renderObjects[renderObjects.size() - 1].get()->Translate(glm::vec3(0.0f, -7.0f, 0.0f));
+	//	//Add floor texture
+	//	renderObjects[renderObjects.size() - 1].get()->AddTexture(RESOURCE::WallDiffuseTexture);
+	//	renderObjects[renderObjects.size() - 1].get()->Translate(glm::vec3(0.0f, -7.0f, 0.0f));
 
-		//Enable light calculation for floor
-		renderObjects[renderObjects.size() - 1].get()->GetShader()->use();
-		renderObjects[renderObjects.size() - 1].get()->GetShader()->setBool("hasLight", true);
-	}
+	//	//Enable light calculation for floor
+	//	renderObjects[renderObjects.size() - 1].get()->GetShader()->use();
+	//	renderObjects[renderObjects.size() - 1].get()->GetShader()->setBool("hasLight", true);
+	//}
 	
-	//Cube
+	//Cubes for pbr inspection
 	{
+		//Vertical spacing
+		float VerticalDisplacement = 1.5;
+		float HorizontalDisplacement = 1.5;
+		unsigned int NumRows = 7;
+		unsigned int NumColums = 7;
+		float StartX = -6;
+		float StartY = 4.5;
+
 		RenderObjectFactory_Cube* factory = new RenderObjectFactory_Cube();
-		renderObjects.push_back(unique_ptr<RenderObject>(factory->CreateRenderObject("Universal.vert", "Universal.frag", "Outline.vert", "Outline.frag")));
+		for (auto row = 0; row < NumRows; ++row)
+		{
+			for (auto col = 0; col < NumColums; ++col)
+			{
+				renderObjects.push_back(unique_ptr<RenderObject>(factory->CreateRenderObject("Universal.vert", "Universal.frag")));
+				renderObjects[renderObjects.size() - 1].get()->Translate(glm::vec3(StartX + HorizontalDisplacement * row, StartY - VerticalDisplacement * col, 0.0f));
+			}
+		}
 		delete factory;
-
-		//Enable light calculation
-		renderObjects[renderObjects.size() - 1].get()->GetShader()->use();
-		renderObjects[renderObjects.size() - 1].get()->GetShader()->setBool("hasLight", true);
-
-		renderObjects[renderObjects.size() - 1].get()->Translate(glm::vec3(0.0f, -6.0f, 0.0f));
-		renderObjects[renderObjects.size() - 1].get()->AddTexture(RESOURCE::CubeDiffuseTexture);
-		renderObjects[renderObjects.size() - 1].get()->AddTexture(RESOURCE::CubeSpecularTexture);
-		//renderObjects[renderObjects.size() - 1].get()->SetDrawOutline(true);
 	}
+
+	//Cube
+	//{
+	//	RenderObjectFactory_Cube* factory = new RenderObjectFactory_Cube();
+	//	renderObjects.push_back(unique_ptr<RenderObject>(factory->CreateRenderObject("Universal.vert", "Universal.frag", "Outline.vert", "Outline.frag")));
+	//	delete factory;
+
+	//	//Enable light calculation
+	//	renderObjects[renderObjects.size() - 1].get()->GetShader()->use();
+	//	renderObjects[renderObjects.size() - 1].get()->GetShader()->setBool("hasLight", true);
+
+	//	renderObjects[renderObjects.size() - 1].get()->Translate(glm::vec3(0.0f, -6.0f, 0.0f));
+	//	renderObjects[renderObjects.size() - 1].get()->AddTexture(RESOURCE::CubeDiffuseTexture);
+	//	renderObjects[renderObjects.size() - 1].get()->AddTexture(RESOURCE::CubeSpecularTexture);
+	//	//renderObjects[renderObjects.size() - 1].get()->SetDrawOutline(true);
+	//}
 
 	//Cube
 	//{
@@ -107,21 +131,21 @@ void Scene_DirectionalLightCube::Init()
 	//	glm::vec3(1.0f, 1.0f, 1.0f)
 	//)));
 
-	Lights.push_back(unique_ptr<Light>(new SpotLight(
-		camera->Position,
-		glm::vec3(0.1f, 0.1f, 0.1f),
-		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(1.0f, 1.0f, 1.0f),
-		12.5,
-		17.5
-	)));
-
-	//Lights.push_back(unique_ptr<Light>(new PointLight(
-	//	glm::vec3(-2.0f, 4.0f, 0.0f),
-	//	glm::vec3(0.0f, 0.1f, 0.0f),
-	//	glm::vec3(0.0f, 0.5f, 0.0f),
-	//	glm::vec3(0.0f, 1.0f, 0.0f)
+	//Lights.push_back(unique_ptr<Light>(new SpotLight(
+	//	camera->Position,
+	//	glm::vec3(0.1f, 0.1f, 0.1f),
+	//	glm::vec3(0.5f, 0.5f, 0.5f),
+	//	glm::vec3(1.0f, 1.0f, 1.0f),
+	//	12.5,
+	//	17.5
 	//)));
+
+	Lights.push_back(unique_ptr<Light>(new PointLight(
+		glm::vec3(3.0f, 0.0f, 5.0f),
+		glm::vec3(0.0f, 0.1f, 0.0f),
+		glm::vec3(0.0f, 0.5f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	)));
 
 	//Calculate light view space transformation matrix
 	GLfloat near_plane = 0.1f, far_plane =100.0f;
@@ -129,6 +153,13 @@ void Scene_DirectionalLightCube::Init()
 	glm::mat4 lightView = glm::lookAt(-Lights[0].get()->GetDirection(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//glm::mat4 view = camera->GetViewMatrix();
 	lightSpaceMatrix = lightProjection * lightView;
+
+	//direct-pbr shader
+	Shader* directPBRShader = JFENGINE::GetInstance()->GetRenderSystem()->GetShaderByType(SHADER_TYPE::SHADER_DIRECT_PBR);
+	if (directPBRShader != nullptr)
+	{
+		SetDirectPBRShaderConstants(directPBRShader);
+	}
 
 	for (auto idx = 0; idx < renderObjects.size(); ++idx)
 	{
@@ -386,6 +417,67 @@ void Scene_DirectionalLightCube::DeferedFinalPass(Shader* _shader, unsigned int 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+void Scene_DirectionalLightCube::UpdateShaderConstantsForDirectPBR(Shader* _shader)
+{
+	if (_shader == nullptr) return;
+	_shader->use();
+	_shader->setVec3("camPos", camera->Position);
+	_shader->setFloat("ao", 1.0);
+	_shader->setInt("numOfLights", Lights.size());
+	for (auto idx = 0; idx < Lights.size(); ++idx)
+	{
+		stringstream ss;
+		ss << "lights[" << idx << "]";
+		string lightName = ss.str();
+		//_shader->setInt(lightName + ".type", Lights[idx].get()->GetLightType());
+		_shader->setVec3(lightName + ".position", Lights[idx].get()->GetPosition());
+		_shader->setVec3(lightName + ".color", glm::vec3(300.0, 300.0, 300.0));
+		//_shader->setVec3(lightName + ".ambient", Lights[idx].get()->GetAmbient());
+		//_shader->setVec3(lightName + ".diffuse", Lights[idx].get()->GetDiffuse()); // darken diffuse light a bit
+		//_shader->setVec3(lightName + ".specular", Lights[idx].get()->GetSpecular());
+	}
+}
+
+void Scene_DirectionalLightCube::DirectPBRPass(FrameBuffer* _frameBuffer, Shader* _directPBRShader)
+{
+	if (_frameBuffer == nullptr || _directPBRShader == nullptr) return;
+	glBindFramebuffer(GL_FRAMEBUFFER, _frameBuffer->GetFrameBuffer());
+	_directPBRShader->use();
+	//Clear first
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	//Render to texture
+	glm::mat4 projection = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+	if (camera != nullptr)
+	{
+		projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 100.0f);
+		view = camera->GetViewMatrix();
+	}
+
+	//Material property
+	glm::vec3 albedo = glm::vec3(0.5, 0.0, 0.0);
+
+	UpdateShaderConstantsForDirectPBR(_directPBRShader);
+	for (auto idx = 0; idx < renderObjects.size(); ++idx)
+	{
+		float metallic = (float)idx / (float)renderObjects.size();
+		float roughness = 1 - (float)idx / (float)renderObjects.size();
+		_directPBRShader->use();
+		_directPBRShader->setVec3("albedo", albedo);
+		_directPBRShader->setFloat("metallic", metallic);
+		_directPBRShader->setFloat("roughness", roughness);
+		renderObjects[idx].get()->SetProjectionMetrix(projection);
+		renderObjects[idx].get()->SetViewMetrix(view);
+		renderObjects[idx].get()->PreRender(_directPBRShader);
+		renderObjects[idx].get()->Render(_directPBRShader);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 void Scene_DirectionalLightCube::SetGeneralShaderConstants(Shader* _shader)
@@ -435,6 +527,13 @@ void Scene_DirectionalLightCube::SetGeneralShaderConstants(Shader* _shader)
 		}
 	}
 	_shader->setFloat("shininess", 64.0f);
+}
+
+void Scene_DirectionalLightCube::SetDirectPBRShaderConstants(Shader* _shader)
+{
+	if (_shader == nullptr) return;
+	_shader->use();
+	//do nothing for now
 }
 
 ///////////////////////////////////////////////////////////////////////////////

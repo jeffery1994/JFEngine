@@ -24,6 +24,7 @@ public:
 	virtual void SetupRenderObject(const char* modelPath = "") {}
 
 	virtual void PreRender();
+	virtual void PreRender(Shader* _shader);
 	virtual void Render();
 	virtual void Render(Shader* _shader);
 	virtual void PostRender() {}

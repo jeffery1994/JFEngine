@@ -65,6 +65,7 @@ void JFRENDER_SYSTEM::InitShaderManager()
 {
 	shaderManager = new ShaderManager();
 	shaderManager->AddShaderByType(new Shader("DeferedFinal.vert", "DeferedFinal.frag"), SHADER_TYPE::SHADER_DEFERED_FINAL);
+	shaderManager->AddShaderByType(new Shader("DirectPBR.vert", "DirectPBR.frag"), SHADER_TYPE::SHADER_DIRECT_PBR);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -201,6 +202,12 @@ void JFRENDER_SYSTEM::Update(float DeltaTime)
 			{
 				CurrentScene->DeferedPass(postProcessBuffer, shadowBuffer);
 			}
+		}
+		//Direct PBR Pass
+		else if (usingDirectPBR && postProcessBuffer != nullptr)
+		{
+			Shader* directPBRShader = shaderManager->GetShaderByType(SHADER_TYPE::SHADER_DIRECT_PBR);
+			CurrentScene->DirectPBRPass(postProcessBuffer, directPBRShader);
 		}
 		//normal pass
 		else
@@ -802,4 +809,12 @@ FrameBuffer* JFRENDER_SYSTEM::GetFrameBufferByType(FRAME_BUFFER_TYPE Type)
 		}
 	}
 	return nullptr;
+}
+
+Shader* JFRENDER_SYSTEM::GetShaderByType(SHADER_TYPE _type)
+{
+	if (shaderManager == nullptr) return nullptr;
+	Shader* shader = shaderManager->GetShaderByType(_type);
+	if (shader == nullptr) return nullptr;
+	return shader;
 }
