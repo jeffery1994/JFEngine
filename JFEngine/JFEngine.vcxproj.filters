@@ -120,6 +120,12 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="jfengine.h">
@@ -234,6 +240,12 @@
       <Filter>OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
       <Filter>OpenGL</Filter>
     </ClInclude>
   </ItemGroup>

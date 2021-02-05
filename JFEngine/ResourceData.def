@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+#include <string>
 
 namespace RESOURCE
 {
@@ -17,4 +18,5 @@ namespace RESOURCE
 		Texture(10, "texture_diffuse", "../textures/skybox/front.jpg"),
 		Texture(11, "texture_diffuse", "../textures/skybox/back.jpg"),
 	};
+	static std::string HDRTexture = "../textures/Mikyway/Mikeway_small.hdr";
 }

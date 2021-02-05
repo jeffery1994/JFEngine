@@ -9,6 +9,8 @@
 #include "Scene_BasicModel.h"
 #include "Scene_DirectionalLightCube.h"
 #include "ShaderManager.h"
+#include "TextureManager.h"
+#include "Texture.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,6 +68,12 @@ void JFRENDER_SYSTEM::InitShaderManager()
 	shaderManager = new ShaderManager();
 	shaderManager->AddShaderByType(new Shader("DeferedFinal.vert", "DeferedFinal.frag"), SHADER_TYPE::SHADER_DEFERED_FINAL);
 	shaderManager->AddShaderByType(new Shader("DirectPBR.vert", "DirectPBR.frag"), SHADER_TYPE::SHADER_DIRECT_PBR);
+}
+
+void JFRENDER_SYSTEM::InitTextureManager()
+{
+	textureManager = new TextureManager();
+	textureManager->AddTexture("", );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

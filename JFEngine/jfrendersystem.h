@@ -10,6 +10,7 @@ struct GLFWwindow;
 class RenderNode;
 class Scene;
 class ShaderManager;
+class TextureManager;
 
 static const unsigned int MAX_NUM_OF_SHADERS = 100;
 static const unsigned int MAX_NUM_OF_RENDERNODE_PER_SCENE = 50;
@@ -65,6 +66,7 @@ private:
 	void InitDefaultCamera();
 	void InitScreenQuad();
 	void InitShaderManager();
+	void InitTextureManager();
 
 	//Node related functions
 	void DeinitRenderNodes();
@@ -90,6 +92,7 @@ private:
 	std::vector<std::unique_ptr<RenderObject>> renderObjects;
 	std::vector<std::unique_ptr<FrameBuffer>> FrameBuffers;
 	ShaderManager* shaderManager;
+	TextureManager* textureManager;
 	Scene* CurrentScene;
 	Camera* camera;
 	GLFWwindow* Window;
