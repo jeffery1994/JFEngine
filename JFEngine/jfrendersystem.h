@@ -68,6 +68,8 @@ private:
 	void InitShaderManager();
 	void InitTextureManager();
 
+	void DoPrecomputationPass();
+
 	//Node related functions
 	void DeinitRenderNodes();
 	void RenderRenderNodes();
@@ -110,7 +112,7 @@ private:
 	int Height = 600;
 
 	//Rendering techinques toggle
-	bool usingDirectPBR = true;
+	bool usingDirectPBR = false;
 	bool usingDeferedShading = false;
 	bool usingBloom = false;
 	bool renderShadows = false;

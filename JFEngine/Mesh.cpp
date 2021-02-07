@@ -47,7 +47,6 @@ Mesh::Mesh(SIMPLE_MESH_TYPE Type)
 		break;
 	case SKYBOX:
 		this->vertices = SkyBoxData;
-		AddCubeMapTexture(RESOURCE::SkyboxTexture);
 		break;
 	}
 
@@ -107,6 +106,22 @@ void Mesh::Draw(Shader* shader)
 	
 	// always good practice to set everything back to defaults once configured.
 	glActiveTexture(GL_TEXTURE0);
+}
+
+void Mesh::Draw()
+{
+	glBindVertexArray(VAO);
+	if (this->indices.size() <= 0)
+	{
+		//draw mesh via vertices buffer
+		glDrawArrays(GL_TRIANGLES, 0, (this->vertices.size()));
+	}
+	else
+	{
+		// draw mesh via element buffer
+		glDrawElements(GL_TRIANGLES, (int)indices.size(), GL_UNSIGNED_INT, 0);
+	}
+	glBindVertexArray(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -8,9 +8,11 @@
 #include "Scene_BasicCube.h"
 #include "Scene_BasicModel.h"
 #include "Scene_DirectionalLightCube.h"
+#include "Scene_HDRToCubemap.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include "Texture.h"
+#include "ResourceData.def"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,12 +70,26 @@ void JFRENDER_SYSTEM::InitShaderManager()
 	shaderManager = new ShaderManager();
 	shaderManager->AddShaderByType(new Shader("DeferedFinal.vert", "DeferedFinal.frag"), SHADER_TYPE::SHADER_DEFERED_FINAL);
 	shaderManager->AddShaderByType(new Shader("DirectPBR.vert", "DirectPBR.frag"), SHADER_TYPE::SHADER_DIRECT_PBR);
+	shaderManager->AddShaderByType(new Shader("HDRToCubemap.vert", "HDRToCubemap.frag"), SHADER_TYPE::SHADER_HDR_TO_CUBEMAP);
+	shaderManager->AddShaderByType(new Shader("Skybox.vert", "Skybox.frag"), SHADER_TYPE::SHADER_SKYBOX);
+	shaderManager->AddShaderByType(new Shader("Universal.vert", "Universal.frag"), SHADER_TYPE::SHADER_DEFAULT);
 }
 
 void JFRENDER_SYSTEM::InitTextureManager()
 {
 	textureManager = new TextureManager();
-	textureManager->AddTexture("", );
+	textureManager->AddTexture(RESOURCE::HDRTexture, TEXTURE_TYPE::TEXTURE_HDR, std::string("equirectangularMap"));
+	//textureManager->AddTexture(RESOURCE::SkyboxTextures, std::string("skybox"));
+	textureManager->CreateEmptyTexture(TEXTURE_TYPE::TEXTURE_CUBEMAP, std::string("skybox"));
+}
+
+void JFRENDER_SYSTEM::DoPrecomputationPass()
+{
+	FrameBuffer* hdrToCubemapBuffer = GetFrameBufferByType(FRAME_BUFFER_TYPE::HDR_TO_CUBEMAP);
+	if (hdrToCubemapBuffer != nullptr)
+	{
+		CurrentScene->PreComputingPass(hdrToCubemapBuffer);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,6 +152,7 @@ bool JFRENDER_SYSTEM::Init()
 	InitFrameBuffers();
 	InitScreenQuad();
 	InitShaderManager();
+	InitTextureManager();
 	//int nrAttributes;
 	//glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
 	//std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
@@ -151,6 +168,7 @@ bool JFRENDER_SYSTEM::Init()
 	//SetupModelScene();
 	//SetupRenderObjectCubeScene();
 	CreateScene();
+	DoPrecomputationPass();
 	Inited = true;
 	return true;
 }
@@ -188,80 +206,87 @@ void JFRENDER_SYSTEM::Update(float DeltaTime)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	//Render all nodes in current scene
-	RenderRenderNodes();
+	//RenderRenderNodes();
 	RenderRenderObjects();
 	if (CurrentScene != nullptr)
 	{
-		FrameBuffer* postProcessBuffer = GetFrameBufferByType(FRAME_BUFFER_TYPE::POST_PROCESS);
-		FrameBuffer* shadowBuffer = GetFrameBufferByType(FRAME_BUFFER_TYPE::SHADOW);
-		FrameBuffer* pingPongBuffer1 = GetFrameBufferByType(FRAME_BUFFER_TYPE::PING_PONG_ONE);
-		FrameBuffer* pingPongBuffer2 = GetFrameBufferByType(FRAME_BUFFER_TYPE::PING_PONG_TWO);
+		FrameBuffer* hdrToCubemapBuffer = GetFrameBufferByType(FRAME_BUFFER_TYPE::HDR_TO_CUBEMAP);
+		//FrameBuffer* postProcessBuffer = GetFrameBufferByType(FRAME_BUFFER_TYPE::POST_PROCESS);
+		//FrameBuffer* shadowBuffer = GetFrameBufferByType(FRAME_BUFFER_TYPE::SHADOW);
+		//FrameBuffer* pingPongBuffer1 = GetFrameBufferByType(FRAME_BUFFER_TYPE::PING_PONG_ONE);
+		//FrameBuffer* pingPongBuffer2 = GetFrameBufferByType(FRAME_BUFFER_TYPE::PING_PONG_TWO);
 
-		//Shadow pass
-		if (renderShadows && shadowBuffer != nullptr)
+		CurrentScene->Render();
+		/*if (hdrToCubemapBuffer != nullptr)
 		{
-			CurrentScene->ShadowPass(shadowBuffer);
-		}
+			CurrentScene->PreComputingPass(hdrToCubemapBuffer);
+		}*/
 
-		//Defered pass
-		if (usingDeferedShading)
-		{
-			if (postProcessBuffer != nullptr)
-			{
-				CurrentScene->DeferedPass(postProcessBuffer, shadowBuffer);
-			}
-		}
-		//Direct PBR Pass
-		else if (usingDirectPBR && postProcessBuffer != nullptr)
-		{
-			Shader* directPBRShader = shaderManager->GetShaderByType(SHADER_TYPE::SHADER_DIRECT_PBR);
-			CurrentScene->DirectPBRPass(postProcessBuffer, directPBRShader);
-		}
-		//normal pass
-		else
-		{
-			if (postProcessBuffer != nullptr)
-			{
-				CurrentScene->NormalPass(postProcessBuffer, shadowBuffer);
-				//CurrentScene->PostProcessPass(postProcessBuffer);
-			}
+		////Shadow pass
+		//if (renderShadows && shadowBuffer != nullptr)
+		//{
+		//	CurrentScene->ShadowPass(shadowBuffer);
+		//}
 
-		}
+		////Defered pass
+		//if (usingDeferedShading)
+		//{
+		//	if (postProcessBuffer != nullptr)
+		//	{
+		//		CurrentScene->DeferedPass(postProcessBuffer, shadowBuffer);
+		//	}
+		//}
+		////Direct PBR Pass
+		//else if (usingDirectPBR && postProcessBuffer != nullptr)
+		//{
+		//	Shader* directPBRShader = shaderManager->GetShaderByType(SHADER_TYPE::SHADER_DIRECT_PBR);
+		//	CurrentScene->DirectPBRPass(postProcessBuffer, directPBRShader);
+		//}
+		////normal pass
+		//else
+		//{
+		//	if (postProcessBuffer != nullptr)
+		//	{
+		//		CurrentScene->NormalPass(postProcessBuffer, shadowBuffer);
+		//		//CurrentScene->PostProcessPass(postProcessBuffer);
+		//	}
 
-		//bloom pass
-		if (usingBloom)
-		{
-			if (pingPongBuffer1 != nullptr && pingPongBuffer2 != nullptr)
-			{
-				CurrentScene->BloomPass(pingPongBuffer1, pingPongBuffer2, postProcessBuffer->GetColorBufferByIndex(1));
-				pingPongBuffer1->DrawBloomResult(pingPongBuffer2->GetColorBufferByIndex(0), postProcessBuffer->GetColorBufferByIndex(0));
-			}
-		}
-		else if (usingDeferedShading)
-		{
-			if (postProcessBuffer != nullptr)
-			{
-				Shader* deferedShader = shaderManager->GetShaderByType(SHADER_TYPE::SHADER_DEFERED_FINAL);
-				if (deferedShader == nullptr) return;
-				CurrentScene->DeferedFinalPass(
-					deferedShader,
-					quadVAO,
-					postProcessBuffer->GetColorBufferByIndex(0),
-					postProcessBuffer->GetColorBufferByIndex(1),
-					postProcessBuffer->GetColorBufferByIndex(2),
-					postProcessBuffer->GetColorBufferByIndex(3)
-				);
-				//CurrentScene->PresentToScreen(postProcessBuffer, postProcessBuffer->GetProcessShader(), postProcessBuffer->GetColorBufferByIndex(2));
-			}
-		}
-		//post process pass except for bloom
-		else
-		{
-			if (postProcessBuffer != nullptr)
-			{
-				CurrentScene->PostProcessPass(postProcessBuffer);
-			}
-		}
+		//}
+
+		////bloom pass
+		//if (usingBloom)
+		//{
+		//	if (pingPongBuffer1 != nullptr && pingPongBuffer2 != nullptr)
+		//	{
+		//		CurrentScene->BloomPass(pingPongBuffer1, pingPongBuffer2, postProcessBuffer->GetColorBufferByIndex(1));
+		//		pingPongBuffer1->DrawBloomResult(pingPongBuffer2->GetColorBufferByIndex(0), postProcessBuffer->GetColorBufferByIndex(0));
+		//	}
+		//}
+		//else if (usingDeferedShading)
+		//{
+		//	if (postProcessBuffer != nullptr)
+		//	{
+		//		Shader* deferedShader = shaderManager->GetShaderByType(SHADER_TYPE::SHADER_DEFERED_FINAL);
+		//		if (deferedShader == nullptr) return;
+		//		CurrentScene->DeferedFinalPass(
+		//			deferedShader,
+		//			quadVAO,
+		//			postProcessBuffer->GetColorBufferByIndex(0),
+		//			postProcessBuffer->GetColorBufferByIndex(1),
+		//			postProcessBuffer->GetColorBufferByIndex(2),
+		//			postProcessBuffer->GetColorBufferByIndex(3)
+		//		);
+		//		//CurrentScene->PresentToScreen(postProcessBuffer, postProcessBuffer->GetProcessShader(), postProcessBuffer->GetColorBufferByIndex(2));
+		//	}
+		//}
+		////post process pass except for bloom
+		//else
+		//{
+		//	if (postProcessBuffer != nullptr)
+		//	{
+		//		CurrentScene->PostProcessPass(postProcessBuffer);
+		//	}
+		//}
 	}
 	
 	//swap buffers
@@ -723,6 +748,7 @@ void JFRENDER_SYSTEM::InitFrameBuffers()
 	FrameBuffers.push_back(unique_ptr<FrameBuffer>(new FrameBuffer((float)Width, (float)Height, FRAME_BUFFER_TYPE::SHADOW)));
 	FrameBuffers.push_back(unique_ptr<FrameBuffer>(new FrameBuffer((float)Width, (float)Height, FRAME_BUFFER_TYPE::PING_PONG_ONE)));
 	FrameBuffers.push_back(unique_ptr<FrameBuffer>(new FrameBuffer((float)Width, (float)Height, FRAME_BUFFER_TYPE::PING_PONG_TWO)));
+	FrameBuffers.push_back(unique_ptr<FrameBuffer>(new FrameBuffer((float)Width, (float)Height, FRAME_BUFFER_TYPE::HDR_TO_CUBEMAP)));
 }
 
 void JFRENDER_SYSTEM::DeinitFrameBuffers()
@@ -798,10 +824,14 @@ void JFRENDER_SYSTEM::CreateScene()
 	//SceneFactory_BasicModel* factory = new SceneFactory_BasicModel();
 
 	// 3.Directional lit cube
-	SceneFactory_DirectionalLightCube * factory = new SceneFactory_DirectionalLightCube();
+	//SceneFactory_DirectionalLightCube * factory = new SceneFactory_DirectionalLightCube();
+
+	// 4. HDR to cube map scene
+	SceneFactory_HDRToCubemap* factory = new SceneFactory_HDRToCubemap();
 
 	//Create Scene
-	CurrentScene = factory->CreateScene((float)Width, (float)Height, camera);
+	//CurrentScene = factory->CreateScene((float)Width, (float)Height, camera);
+	CurrentScene = factory->CreateScene((float)Width, (float)Height, camera, textureManager, shaderManager);
 
 	//Delete factory
 	delete factory;

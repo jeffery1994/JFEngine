@@ -77,6 +77,7 @@ public:
 
 	// render the mesh
 	void Draw(Shader* shader);
+	void Draw();
 
 	// Add texture to mesh
 	bool AddTexture(Texture &texture);

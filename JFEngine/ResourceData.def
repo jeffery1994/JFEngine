@@ -18,5 +18,14 @@ namespace RESOURCE
 		Texture(10, "texture_diffuse", "../textures/skybox/front.jpg"),
 		Texture(11, "texture_diffuse", "../textures/skybox/back.jpg"),
 	};
-	static std::string HDRTexture = "../textures/Mikyway/Mikeway_small.hdr";
+	static std::string HDRTexture = "../textures/Milkyway/Brooklyn_Bridge_Planks_2k.hdr";
+	static std::vector<std::string> SkyboxTextures =
+	{
+		"../textures/skybox/right.jpg",
+		"../textures/skybox/left.jpg",
+		"../textures/skybox/top.jpg",
+		"../textures/skybox/bottom.jpg",
+		"../textures/skybox/front.jpg",
+		"../textures/skybox/back.jpg",
+	};
 }

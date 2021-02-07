@@ -11,13 +11,14 @@ public:
 	~TextureManager();
 
 	//Getter
-	const JFTexture* GetTextureByIndex(const unsigned int& _index) { return textures[_index]; }
+	JFTexture* GetTextureByIndex(const unsigned int& _index) { return textures[_index]; }
+	JFTexture* GetTextureByName(const std::string _name);
 	const unsigned int GetNumberOfTextures() { return (const unsigned int)textures.size(); }
 
 	//Add textures
-	void AddTexture(JFTexture* _texture); //This might cause problems
-	void AddTexture(const std::string _path, TEXTURE_TYPE _textureType);
-	void AddTexture(const std::vector<std::string> _cubemapPaths);
+	void AddTexture(const std::string _path, TEXTURE_TYPE _textureType, std::string _name);
+	void AddTexture(const std::vector<std::string> _cubemapPaths, std::string _name);
+	void CreateEmptyTexture(TEXTURE_TYPE _textureType, std::string _name);
 	void Clear();
 
 private:

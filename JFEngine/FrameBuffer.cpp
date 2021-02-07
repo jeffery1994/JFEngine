@@ -26,6 +26,8 @@ FrameBuffer::FrameBuffer(float _width, float _height, FRAME_BUFFER_TYPE _type)
 	case SHADOW:
 		InitShadowBuffer();
 		break;
+	case HDR_TO_CUBEMAP:
+		InitHDRToCubeMapBuffer();
 	default:
 		break;
 	}
@@ -125,6 +127,20 @@ void FrameBuffer::InitShadowBuffer()
 	//setup post process shader
 	postProcessShader = new Shader("PostProcess.vert", "PostProcess.frag");
 
+	Inited = true;
+}
+
+void FrameBuffer::InitHDRToCubeMapBuffer()
+{
+	if (Inited) return;
+	unsigned int captureRBO;
+	glGenFramebuffers(1, &fbo);
+	glGenRenderbuffers(1, &captureRBO);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 	Inited = true;
 }
 

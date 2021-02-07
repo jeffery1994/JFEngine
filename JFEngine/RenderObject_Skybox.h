@@ -13,10 +13,12 @@ public:
 	void SetupRenderObject(const char* modelPath = "");
 
 	void PreRender();
+	void PreRender(Shader* _shader);
 	void Destroy();
 	void Draw();
 	void Draw(Shader* _shader);
 	void DrawWithOutline();
+	bool AddCubeMapTexture(std::vector<Texture>& _texture);
 private:
 	std::unique_ptr<Mesh> mesh;
 };

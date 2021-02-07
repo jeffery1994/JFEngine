@@ -33,6 +33,7 @@ enum FRAME_BUFFER_TYPE
 	SHADOW,
 	PING_PONG_ONE,
 	PING_PONG_TWO,
+	HDR_TO_CUBEMAP,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,7 @@ public:
 	~FrameBuffer();
 	void InitPostProcessBuffer(unsigned int _numOfColorBuffer = 1);
 	void InitShadowBuffer();
+	void InitHDRToCubeMapBuffer();
 	void Deinit();
 	void Draw();
 	void DrawWithShaderAndTexture(Shader* _shader, unsigned int _textureObject);

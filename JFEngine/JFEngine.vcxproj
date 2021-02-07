@@ -190,6 +190,7 @@
     <ClCompile Include="Scene_BasicCube.cpp" />
     <ClCompile Include="Scene_BasicModel.cpp" />
     <ClCompile Include="Scene_DirectionalLightCube.cpp" />
+    <ClCompile Include="Scene_HDRToCubemap.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Scene_BasicCube.h" />
     <ClInclude Include="Scene_BasicModel.h" />
     <ClInclude Include="Scene_DirectionalLightCube.h" />
+    <ClInclude Include="Scene_HDRToCubemap.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="stb_image.h" />
@@ -256,6 +258,8 @@
     <None Include="EnvironmentMapping.vert" />
     <None Include="GaussianBlur.frag" />
     <None Include="GaussianBlur.vert" />
+    <None Include="HDRToCubemap.vert" />
+    <None Include="HDRToCubemap.frag" />
     <None Include="LightingCube.frag" />
     <None Include="LightingCube.vert" />
     <None Include="LightingMaterialCube.frag" />

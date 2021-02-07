@@ -1,6 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 #include "RenderObject_Skybox.h"
+#include "TextureManager.h"
+#include "Texture.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,8 +12,9 @@ RenderObject_Skybox::RenderObject_Skybox()
 
 void RenderObject_Skybox::Draw(Shader* _shader)
 {
-	_shader->use();
-	mesh->Draw(_shader);
+	glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+	mesh->Draw();
+	glDepthFunc(GL_LESS); // set depth function back to default
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,6 +47,41 @@ void RenderObject_Skybox::PreRender()
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ProjectionMetrix));
 }
 
+void RenderObject_Skybox::PreRender(Shader* _shader)
+{
+	if (_shader == nullptr) return;
+	_shader->use();
+	unsigned int loc = glGetUniformLocation(_shader->ID, "model");
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ModelMetrix));
+	loc = glGetUniformLocation(_shader->ID, "view");
+	ViewMetrix = glm::mat4(glm::mat3(ViewMetrix)); // remove translation from the view matrix
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ViewMetrix));
+	loc = glGetUniformLocation(_shader->ID, "projection");
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(ProjectionMetrix));
+
+	for (auto idx = 0; idx < textureReferences.size(); ++idx)
+	{
+		if (textureReferences[idx] == nullptr) continue;
+		glActiveTexture(GL_TEXTURE0 + idx); // active proper texture unit before binding
+		glUniform1i(glGetUniformLocation(_shader->ID, textureReferences[idx]->GetName().c_str()), idx);
+		switch (textureReferences[idx]->GetTextureType())
+		{
+		case TEXTURE_TYPE::TEXTURE_2D:
+			glBindTexture(GL_TEXTURE_2D, textureReferences[idx]->GetTexture());
+			break;
+		case TEXTURE_TYPE::TEXTURE_3D:
+			break;
+		case TEXTURE_TYPE::TEXTURE_CUBEMAP:
+			glBindTexture(GL_TEXTURE_CUBE_MAP, textureReferences[idx]->GetTexture());
+			break;
+		case TEXTURE_TYPE::TEXTURE_HDR:
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 void RenderObject_Skybox::Destroy()
@@ -65,6 +103,11 @@ void RenderObject_Skybox::Draw()
 ///////////////////////////////////////////////////////////////////////////////
 void RenderObject_Skybox::DrawWithOutline()
 {
+}
+
+bool RenderObject_Skybox::AddCubeMapTexture(std::vector<Texture>& _texture)
+{
+	return mesh.get()->AddCubeMapTexture(_texture);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

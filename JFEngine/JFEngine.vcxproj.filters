@@ -126,6 +126,9 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="Scene_HDRToCubemap.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="jfengine.h">
@@ -246,6 +249,9 @@
       <Filter>OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene_HDRToCubemap.h">
       <Filter>OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
@@ -389,6 +395,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="DirectPBR.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="HDRToCubemap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="HDRToCubemap.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -7,6 +7,8 @@
 #include "Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
+class JFTexture;
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 class RenderObject
@@ -27,7 +29,7 @@ public:
 	virtual void PreRender(Shader* _shader);
 	virtual void Render();
 	virtual void Render(Shader* _shader);
-	virtual void PostRender() {}
+	virtual void PostRender();
 	virtual void ShadowPass();
 	virtual void Destroy();
 	virtual void Draw();
@@ -58,7 +60,16 @@ public:
 	//Texture
 	virtual bool AddTexture(Texture& texture);
 	virtual bool AddCubeMapTexture(std::vector<Texture>& _texture) { return true; }
+	virtual void AddTextureReference(JFTexture* _texture);
+
+	//Shader
+	virtual void SetShaderReference(Shader* _shader) { shaderReference = _shader; }
+	virtual Shader* GetShaderReference() { return shaderReference; }
+
+	void ClearTextureReferences();
 protected:
+	std::vector<JFTexture*> textureReferences;
+	Shader* shaderReference;
 	std::unique_ptr<Shader> shader;
 	std::unique_ptr<Shader> shadowShader;
 	std::unique_ptr<Shader> outlineShader;

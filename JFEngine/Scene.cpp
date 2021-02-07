@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp> 
 #include "camera.h"
 #include "FrameBuffer.h"
+#include "TextureManager.h"
+#include "ShaderManager.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +14,15 @@ Scene::Scene(float Width, float Height, Camera* _camera)
 	:width(Width)
 	,height(Height)
 	,camera(_camera)
+{
+}
+
+Scene::Scene(float _width, float _height, Camera* _camera, TextureManager* _textureManager, ShaderManager* _shaderManager)
+	:width(_width)
+	,height(_height)
+	,camera(_camera)
+	,textureManager(_textureManager)
+	,shaderManager(_shaderManager)
 {
 }
 

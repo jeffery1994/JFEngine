@@ -6,19 +6,28 @@ TextureManager::~TextureManager()
 	Clear();
 }
 
-void TextureManager::AddTexture(JFTexture* _texture)
+JFTexture* TextureManager::GetTextureByName(const std::string _name)
 {
-	textures.push_back(_texture);
+	for (auto texture : textures)
+	{
+		if (texture->GetName() == _name) return texture;
+	}
+	return nullptr;
 }
 
-void TextureManager::AddTexture(const std::string _path, TEXTURE_TYPE _textureType)
+void TextureManager::AddTexture(const std::string _path, TEXTURE_TYPE _textureType, std::string _name)
 {
-	textures.push_back(new JFTexture(_path, _textureType));
+	textures.push_back(new JFTexture(_path, _textureType, _name));
 }
 
-void TextureManager::AddTexture(const std::vector<std::string> _cubemapPaths)
+void TextureManager::AddTexture(const std::vector<std::string> _cubemapPaths, std::string _name)
 {
-	textures.push_back(new JFTexture(_cubemapPaths));
+	textures.push_back(new JFTexture(_cubemapPaths, _name));
+}
+
+void TextureManager::CreateEmptyTexture(TEXTURE_TYPE _textureType, std::string _name)
+{
+	textures.push_back(new JFTexture(_textureType, _name));
 }
 
 void TextureManager::Clear()

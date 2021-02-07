@@ -5,18 +5,27 @@
 
 static const unsigned int NUM_OF_CUBEMAP_FACES = 6;
 
-JFTexture::JFTexture(std::string _path, TEXTURE_TYPE _type)
+JFTexture::JFTexture(std::string _path, TEXTURE_TYPE _type, std::string _name)
 	:path(_path)
 	,textureType(_type)
+	,name(_name)
 {
 	Setup();
 }
 
-JFTexture::JFTexture(const std::vector<std::string> _cubemapPaths)
+JFTexture::JFTexture(const std::vector<std::string> _cubemapPaths, std::string _name)
 	:cubeMapPaths(_cubemapPaths)
 	,textureType(TEXTURE_TYPE::TEXTURE_CUBEMAP)
+	,name(_name)
 {
 	Setup();
+}
+
+JFTexture::JFTexture(const TEXTURE_TYPE _type, const std::string _name)
+	:textureType(_type)
+	,name(_name)
+{
+	SetupEmptyTexture();
 }
 
 JFTexture::~JFTexture()
@@ -38,6 +47,24 @@ void JFTexture::Setup()
 		break;
 	case TEXTURE_TYPE::TEXTURE_3D:
 		SetupTexture3D();
+		break;
+	default:
+		break;
+	}
+}
+
+void JFTexture::SetupEmptyTexture()
+{
+	switch (textureType)
+	{
+	case TEXTURE_TYPE::TEXTURE_2D:
+		break;
+	case TEXTURE_TYPE::TEXTURE_CUBEMAP:
+		SetupEmptyCubemap();
+		break;
+	case TEXTURE_TYPE::TEXTURE_HDR:
+		break;
+	case TEXTURE_TYPE::TEXTURE_3D:
 		break;
 	default:
 		break;
@@ -139,4 +166,19 @@ void JFTexture::SetupTextureHDR()
 void JFTexture::SetupTexture3D()
 {
 
+}
+
+void JFTexture::SetupEmptyCubemap()
+{
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+	for (unsigned int i = 0; i < NUM_OF_CUBEMAP_FACES; ++i)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }

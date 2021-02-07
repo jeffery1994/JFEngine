@@ -9,6 +9,8 @@
 class RenderObject;
 class Camera;
 class FrameBuffer;
+class TextureManager;
+class ShaderManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,7 +18,8 @@ class Scene
 {
 public:
 	Scene() {}
-	Scene(float Width, float Height, Camera* camera = nullptr);
+	Scene(float _width, float _height, Camera* _camera = nullptr);
+	Scene(float _width, float _height, Camera* _camera, TextureManager* _textureManager, ShaderManager* _shaderManager);
 	virtual void Deinit();
 	virtual void Render();
 	virtual void Render(FrameBuffer* _frameBuffer);
@@ -30,11 +33,14 @@ public:
 	virtual void PresentToScreen(FrameBuffer* _frameBuffer, Shader* _shader, unsigned int _texture);
 	virtual void PostProcessPass(FrameBuffer* _frameBuffer) {}
 	virtual void DirectPBRPass(FrameBuffer* _frameBuffer, Shader* _directPBRShader) {}
+	virtual void PreComputingPass(FrameBuffer* _frameBuffer = nullptr) {}
 	virtual void Init() = 0;
 protected:
 	std::vector<std::unique_ptr<RenderObject>> renderObjects;
 	std::vector<std::unique_ptr<Light>> Lights;
 	glm::mat4 lightSpaceMatrix;
+	TextureManager* textureManager;
+	ShaderManager* shaderManager;
 	Camera* camera;
 	float width, height;
 private:
@@ -48,4 +54,8 @@ class SceneFactory
 public:
 	SceneFactory() {}
 	virtual Scene* CreateScene(float _width, float _height, Camera* _camera) = 0;
+	virtual Scene* CreateScene(float _width, float _height, Camera* _camera, TextureManager* _textureManager, ShaderManager* _shaderManager)
+	{
+		return nullptr;
+	}
 };

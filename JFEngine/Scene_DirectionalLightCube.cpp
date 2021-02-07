@@ -50,8 +50,8 @@ void Scene_DirectionalLightCube::Init()
 		//Vertical spacing
 		float VerticalDisplacement = 1.5;
 		float HorizontalDisplacement = 1.5;
-		unsigned int NumRows = 7;
-		unsigned int NumColums = 7;
+		int NumRows = 7;
+		int NumColums = 7;
 		float StartX = -6;
 		float StartY = 4.5;
 
@@ -423,7 +423,7 @@ void Scene_DirectionalLightCube::UpdateShaderConstantsForDirectPBR(Shader* _shad
 	_shader->use();
 	_shader->setVec3("camPos", camera->Position);
 	_shader->setFloat("ao", 1.0);
-	_shader->setInt("numOfLights", Lights.size());
+	_shader->setInt("numOfLights", (int)Lights.size());
 	for (auto idx = 0; idx < Lights.size(); ++idx)
 	{
 		stringstream ss;
